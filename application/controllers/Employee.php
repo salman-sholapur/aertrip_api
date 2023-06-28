@@ -11,30 +11,49 @@ class Employee extends REST_Controller {
         $this->load->model('EmployeeM'); 
     }
 
+    public function search_get($keyword=null) {
+		 
+		if(empty($keyword)){  
+			apiBadRequest("Search keyword is required"); 
+		}
+
+		$employees = $this->EmployeeM->searchEmployee($keyword);
+		//check if the Employee data exists
+		if(!empty($employees)){
+			// Set the response and exit
+			//OK (200) being the HTTP response code 
+			apiOkResponse($employees);
+		}else{
+			// Set the response and exit
+			//NOT_FOUND (404) being the HTTP response code 
+			apiNotFoundResponse(['message'=>'No employee(s) found.']);
+		}
+	}
+
     public function delete_delete($id=null)
     {
-        // Check whether department ID is not empty
+        // Check whether Employee ID is not empty
         if($id){
 
         	//Validate company id
 	    	$validateEmployee = $this->CommonM->getEmployeeById($id);
 	    	if(!$validateEmployee){
-	    		$this->badRequest(['message'=>'Invalid employee id']);
+	    		apiBadRequest(['message'=>'Invalid employee id']);
 	    	}
   
-            // Delete department record from database
+            // Delete Employee record from database
             $delete = $this->EmployeeM->delete($id);
             
             if($delete){
                 // Set the response and exit
-				$this->successResponse("Employee has been deleted successfully."); 
+				apiSuccessResponse("Employee has been deleted successfully."); 
             }else{
                 // Set the response and exit 
-				$this->badRequest(['message'=>'Something went wrong, please try again.']);
+				apiBadRequest(['message'=>'Something went wrong, please try again.']);
             }
         }else{
 			// Set the response and exit
-			$this->notFoundResponse(['message'=>'No department found.']);
+			apiNotFoundResponse(['message'=>'No Employee found.']);
 		}
     } 
 
@@ -43,15 +62,15 @@ class Employee extends REST_Controller {
 		//otherwise single row will be returned
 		$employees = $this->EmployeeM->getRows($id);
 		
-		//check if the Department data exists
+		//check if the Employee data exists
 		if(!empty($employees)){
 			// Set the response and exit
 			//OK (200) being the HTTP response code
-			$this->response($employees, REST_Controller::HTTP_OK);
+			apiOkResponse($employees, REST_Controller::HTTP_OK);
 		}else{
 			// Set the response and exit
 			//NOT_FOUND (404) being the HTTP response code 
-			$this->notFoundResponse(['message'=>'No employee(s) found.']);
+			apiNotFoundResponse(['message'=>'No employee(s) found.']);
 		}
 	}
 
@@ -67,36 +86,36 @@ class Employee extends REST_Controller {
 	    	//Validate Eemployee id
 	    	$validateEemployee = $this->CommonM->getEmployeeById($this->put('employee_id'));
 	    	if(!$validateEemployee){
-	    		$this->badRequest(['message'=>'Invalid employee id']);
+	    		apiBadRequest(['message'=>'Invalid employee id']);
 	    	}
   
 
-			//Prepare department array
+			//Prepare Employee array
 	    	$saveData = array( 
 				'emp_name' => $this->put('emp_name'),
 				'emp_email_id' => $this->put('emp_email_id'),
 				'emp_salary' => $this->put('emp_salary')
 			);
 			$employee_id = $this->put('employee_id');
-	    	// Update department record in database
+	    	// Update Employee record in database
 			$update = $this->EmployeeM->update($saveData, $employee_id);
 			// Check if the user data updated
 			if($update){
 
-				//Save the employee department
+				//Save the employee Employee
 				$departments = $this->put('emp_departments'); 
 		    	if($departments && is_array($departments)){
 			    	$this->EmployeeM->saveDepartments($departments, $employee_id);	 
 			    } 
 
 				// Set the response and exit 
-				$this->successResponse("Employee has been updated successfully."); 
+				apiSuccessResponse("Employee has been updated successfully."); 
 			}else{
 				// Set the response and exit
-				$this->badRequest("Something went wrong, please try again."); 
+				apiBadRequest("Something went wrong, please try again."); 
 			}
 		}else{  
-	    	$this->badRequest($this->form_validation->error_array());
+	    	apiBadRequest($this->form_validation->error_array());
 	    }
 	}
 
@@ -107,17 +126,17 @@ class Employee extends REST_Controller {
     	$this->form_validation->set_rules('emp_salary', 'Employee salary', 'numeric|greater_than_equal_to[0]|max_length[11]'); 
     	if($this->form_validation->run())
 	    {   
-	    	//Prepare department array
+	    	//Prepare Employee array
 	    	$saveData = array(
 				'emp_name' => $this->post('emp_name'),
 				'emp_email_id' => $this->post('emp_email_id'),
 				'emp_salary' => $this->post('emp_salary')
 			);
 
-	    	// Insert department record in database
+	    	// Insert Employee record in database
 			$employee_id = $this->EmployeeM->insert($saveData);
 
-			// Check if the department data inserted
+			// Check if the Employee data inserted
 			if($employee_id){
 
 				//Save the employee department
@@ -127,29 +146,14 @@ class Employee extends REST_Controller {
 			    } 
 
 				// Set the response and exit
-				$this->successResponse("Employee has been saved successfully."); 
+				apiSuccessResponse("Employee has been saved successfully."); 
 			}else{
 				// Set the response and exit
-				$this->badRequest("Something went wrong, please try again."); 
+				apiBadRequest("Something went wrong, please try again."); 
 			} 
 	    }else{  
-	    	$this->badRequest($this->form_validation->error_array());
+	    	apiBadRequest($this->form_validation->error_array());
 	    }  
 	}
- 
-	public function badRequest($message)
-	{
-		return $this->response($message, REST_Controller::HTTP_BAD_REQUEST);
-	}
-
-	public function successResponse($message)
-	{
-		return $this->response(['status' => TRUE, 'message' => $message], REST_Controller::HTTP_OK);
-	}
-
-	public function notFoundResponse($message)
-	{ 
-		return $this->response(['status' => FALSE, 'message' => $message ], REST_Controller::HTTP_NOT_FOUND);
-	}
-
+  
 }

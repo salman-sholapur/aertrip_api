@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 28, 2023 at 08:17 AM
+-- Generation Time: Jun 28, 2023 at 11:04 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 7.4.30
 
@@ -63,7 +63,8 @@ CREATE TABLE `department` (
 INSERT INTO `department` (`department_id`, `company_id`, `dept_name`, `dept_number`, `created_on`, `modified_on`) VALUES
 (1, 1, 'Manager', '7457456', '2023-06-28 00:26:33', '2023-06-28 02:06:04'),
 (2, 1, 'HRS', '6346344', '2023-06-28 01:28:02', '2023-06-28 02:03:22'),
-(4, 1, 'UI Development', '1864846', '2023-06-28 09:12:42', '2023-06-28 09:12:59');
+(4, 1, 'UI Development', '1864846', '2023-06-28 09:12:42', '2023-06-29 00:01:23'),
+(6, 1, 'Sales', '97855', '2023-06-29 02:16:37', '2023-06-29 02:16:37');
 
 -- --------------------------------------------------------
 
@@ -87,7 +88,8 @@ CREATE TABLE `employee` (
 INSERT INTO `employee` (`employee_id`, `emp_name`, `emp_email_id`, `emp_salary`, `created_on`, `modified_on`) VALUES
 (2, 'Salman', 'salman@mail.com', '50000.00', '2023-06-28 09:42:14', '2023-06-28 09:42:14'),
 (4, 'Md Salman', 'md_salman@mail.com', '50000.00', '2023-06-28 09:45:08', '2023-06-28 09:45:08'),
-(5, 'Mohammed Salman', 'md_salman@mail.com', '50000.00', '2023-06-28 09:45:33', '2023-06-28 09:45:33');
+(5, 'Mohammed Salman', 'md_salman@mail.com', '50000.00', '2023-06-28 09:45:33', '2023-06-28 09:45:33'),
+(6, 'Kiran Kumar', 'kiran.k@mail.in', '65500.00', '2023-06-29 00:10:43', '2023-06-29 00:11:58');
 
 -- --------------------------------------------------------
 
@@ -109,8 +111,9 @@ CREATE TABLE `employee_contact` (
 --
 
 INSERT INTO `employee_contact` (`contact_id`, `employee_id`, `contact_number`, `contact_address`, `created_on`, `modified_on`) VALUES
-(6, 2, '198464646', '4th Cross, Shivaji Nagar Mumbai - 654515', '2023-06-28 11:39:53', '2023-06-28 11:39:53'),
-(7, 2, '198464646', '8th Cross, Shivaji Nagar Mumbai - 654515', '2023-06-28 11:40:14', '2023-06-28 11:40:14');
+(7, 2, '198464646', '8th Cross, Shivaji Nagar Mumbai - 654515', '2023-06-28 11:40:14', '2023-06-28 11:40:14'),
+(8, 2, '198464646', '8th Cross, Shivaji Nagar Mumbai - 654515', '2023-06-29 00:16:10', '2023-06-29 00:16:10'),
+(9, 2, '198464646', '8th Cross, Shivaji Nagar Mumbai - 654515', '2023-06-29 02:23:20', '2023-06-29 02:23:20');
 
 -- --------------------------------------------------------
 
@@ -134,7 +137,10 @@ INSERT INTO `emp_works_dept` (`emp_work_id`, `employee_id`, `department_id`) VAL
 (7, 4, 1),
 (8, 4, 2),
 (9, 5, 1),
-(10, 5, 2);
+(10, 5, 2),
+(28, 6, 1),
+(29, 6, 2),
+(30, 6, 4);
 
 -- --------------------------------------------------------
 
@@ -242,25 +248,25 @@ ALTER TABLE `company`
 -- AUTO_INCREMENT for table `department`
 --
 ALTER TABLE `department`
-  MODIFY `department_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `department_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `employee_contact`
 --
 ALTER TABLE `employee_contact`
-  MODIFY `contact_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `contact_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `emp_works_dept`
 --
 ALTER TABLE `emp_works_dept`
-  MODIFY `emp_work_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `emp_work_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `keys`

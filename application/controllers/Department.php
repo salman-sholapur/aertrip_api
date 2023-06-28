@@ -11,22 +11,22 @@ class Department extends REST_Controller {
         $this->load->model('DepartmentM'); 
     }
 
+
     public function delete_delete($id=null)
     {
         // Check whether department ID is not empty
         if($id){
 
-        	//Validate company id
+        	//Validate department id
 	    	$validateDepartment = $this->CommonM->getDepartmentById($id);
 	    	if(!$validateDepartment){
-	    		$this->badRequest(['message'=>'Invalid department id']);
+	    		apiBadRequest(['message'=>'Invalid department id']);
 	    	}
 
-
-	    	//Validate company id
+	    	//Validate department id
 	    	$isEmployeeExist = $this->CommonM->getEmployeeByDepartmentId($id);
 	    	if($isEmployeeExist){
-	    		$this->badRequest(['message'=>'Employee(s) exist in this department, So cannot delete this department.']);
+	    		apiBadRequest(['message'=>'Employee(s) exist in this department, So cannot delete this department.']);
 	    	}
 
             // Delete department record from database
@@ -34,10 +34,10 @@ class Department extends REST_Controller {
             
             if($delete){
                 // Set the response and exit
-				$this->successResponse("Department has been deleted successfully."); 
+				apiSuccessResponse("Department has been deleted successfully."); 
             }else{
                 // Set the response and exit 
-				$this->badRequest(['message'=>'Something went wrong, please try again.']);
+				apiBadRequest(['message'=>'Something went wrong, please try again.']);
             }
         }else{
 			// Set the response and exit
@@ -54,11 +54,11 @@ class Department extends REST_Controller {
 		if(!empty($departments)){
 			// Set the response and exit
 			//OK (200) being the HTTP response code
-			$this->response($departments, REST_Controller::HTTP_OK);
+			apiOkResponse($departments);
 		}else{
 			// Set the response and exit
 			//NOT_FOUND (404) being the HTTP response code 
-			$this->notFoundResponse(['message'=>'No department(s) found.']);
+			apiNotFoundResponse(['message'=>'No department(s) found.']);
 		}
 	}
 
@@ -74,13 +74,13 @@ class Department extends REST_Controller {
 	    	//Validate company id
 	    	$validateCompany = $this->CommonM->getCompanyById($this->put('company_id'));
 	    	if(!$validateCompany){
-	    		$this->badRequest(['message'=>'Invalid company id']);
+	    		apiBadRequest(['message'=>'Invalid company id']);
 	    	}
  
 	    	//Validate company id
 	    	$validateDepartment = $this->CommonM->getDepartmentById($this->put('department_id'));
 	    	if(!$validateDepartment){
-	    		$this->badRequest(['message'=>'Invalid department id']);
+	    		apiBadRequest(['message'=>'Invalid department id']);
 	    	}
 
 			//Prepare department array
@@ -94,17 +94,16 @@ class Department extends REST_Controller {
 			// Check if the user data updated
 			if($update){
 				// Set the response and exit 
-				$this->successResponse("Department has been updated successfully."); 
+				apiSuccessResponse("Department has been updated successfully."); 
 			}else{
 				// Set the response and exit
-				$this->badRequest("Something went wrong, please try again."); 
+				apiBadRequest("Something went wrong, please try again."); 
 			}
 		}else{  
-	    	$this->badRequest($this->form_validation->error_array());
+	    	apiBadRequest($this->form_validation->error_array());
 	    }
 	}
-
-
+ 
     public function save_post() 
     { 
 		$this->form_validation->set_rules('company_id', 'Company id', 'trim|required|numeric|max_length[11]|greater_than[0]');
@@ -115,7 +114,7 @@ class Department extends REST_Controller {
 	    	//Validate company id
 	    	$validateCompany = $this->CommonM->getCompanyById($this->post('company_id'));
 	    	if(!$validateCompany){
-	    		$this->badRequest(['message'=>'Invalid company id']);
+	    		apiBadRequest(['message'=>'Invalid company id']);
 	    	}
 
 	    	//Prepare department array
@@ -130,32 +129,14 @@ class Department extends REST_Controller {
 			// Check if the department data inserted
 			if($save){
 				// Set the response and exit
-				$this->successResponse("Department has been added successfully."); 
+				apiSuccessResponse("Department has been added successfully."); 
 			}else{
 				// Set the response and exit
-				$this->badRequest("Something went wrong, please try again."); 
+				apiBadRequest("Something went wrong, please try again."); 
 			} 
 	    }else{  
-	    	$this->badRequest($this->form_validation->error_array());
+	    	apiBadRequest($this->form_validation->error_array());
 	    }  
-	}
-
-
-
-
-	public function badRequest($message)
-	{
-		return $this->response($message, REST_Controller::HTTP_BAD_REQUEST);
-	}
-
-	public function successResponse($message)
-	{
-		return $this->response(['status' => TRUE, 'message' => $message], REST_Controller::HTTP_OK);
-	}
-
-	public function notFoundResponse($message)
-	{ 
-		return $this->response(['status' => FALSE, 'message' => $message ], REST_Controller::HTTP_NOT_FOUND);
 	}
 
 }

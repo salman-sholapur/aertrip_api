@@ -10,6 +10,40 @@ class EmployeeM extends CI_Model {
         $this->tbl_emp_contact = 'employee_contact';
     }
     
+
+    function searchEmployee($keyword)
+    {
+        $results = array();
+        $keyword = urldecode($keyword);
+        $this->db->like('emp_name', $keyword); 
+        $this->db->or_like('emp_email_id', $keyword);    
+        $query = $this->db->get($this->tbl_name);   
+        foreach ($query->result_array() as $employee) 
+        {  
+            //Get department info
+            $this->db->select('d.department_id, d.dept_name, d.dept_number');
+            $this->db->from('department d');
+            $this->db->join('emp_works_dept ed', 'd.department_id = ed.department_id'); 
+            $this->db->where('ed.employee_id', $employee['employee_id']);  
+            $query = $this->db->get(); 
+            $departments = $query->result_array(); 
+
+            //Get contact info 
+            $this->db->select('contact_id, contact_number, contact_address');    
+            $this->db->where(array('employee_id' => $employee['employee_id'])); 
+            $this->db->order_by('contact_id', 'DESC'); 
+            $contacts_query = $this->db->get('employee_contact');
+            $contacts = $contacts_query->result_array();
+            $results[] = array(
+                'employee' => $employee,
+                'departments' => $departments,
+                'contacts' => $contacts
+            );
+        }
+        return $results;
+    }
+
+
      /*
      * Delete user data
      */

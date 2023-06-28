@@ -20,7 +20,7 @@ class EmployeeContact extends REST_Controller {
         	//Validate company id
 	    	$validateContact = $this->CommonM->getContactById($id);
 	    	if(!$validateContact){
-	    		$this->badRequest(['message'=>'Invalid contact id']);
+	    		apiBadRequest(['message'=>'Invalid contact id']);
 	    	}
   
             // Delete contact record from database
@@ -28,14 +28,14 @@ class EmployeeContact extends REST_Controller {
             
             if($delete){
                 // Set the response and exit
-				$this->successResponse("Contact has been deleted successfully."); 
+				apiSuccessResponse("Contact has been deleted successfully."); 
             }else{
                 // Set the response and exit 
-				$this->badRequest(['message'=>'Something went wrong, please try again.']);
+				apiBadRequest(['message'=>'Something went wrong, please try again.']);
             }
         }else{
 			// Set the response and exit
-			$this->notFoundResponse(['message'=>'No department found.']);
+			apiNotFoundResponse(['message'=>'No department found.']);
 		}
     } 
 
@@ -49,11 +49,11 @@ class EmployeeContact extends REST_Controller {
 		if(!empty($employees)){
 			// Set the response and exit
 			//OK (200) being the HTTP response code
-			$this->response($employees, REST_Controller::HTTP_OK);
+			apiOkResponse($employees);
 		}else{
 			// Set the response and exit
 			//NOT_FOUND (404) being the HTTP response code 
-			$this->notFoundResponse(['message'=>'No contacts found.']);
+			apiNotFoundResponse(['message'=>'No contacts found.']);
 		}
 	}
 
@@ -70,14 +70,14 @@ class EmployeeContact extends REST_Controller {
 	    	$contact_id = $this->put('contact_id');
 	    	$validateContact = $this->CommonM->getContactById($contact_id);
 	    	if(!$validateContact){
-	    		$this->badRequest(['message'=>'Invalid contact id']);
+	    		apiBadRequest(['message'=>'Invalid contact id']);
 	    	}
 
 	    	//Validate Eemployee id
 	    	$employee_id = $this->put('employee_id');
 	    	$validateEmployee = $this->CommonM->getEmployeeById($employee_id);
 	    	if(!$validateEmployee){
-	    		$this->badRequest(['message'=>'Invalid employee id']);
+	    		apiBadRequest(['message'=>'Invalid employee id']);
 	    	}
 
 	    	//Prepare department array
@@ -93,13 +93,13 @@ class EmployeeContact extends REST_Controller {
 			// Check if the department data inserted
 			if($update){  
 				// Set the response and exit
-				$this->successResponse("Employee contact has been updated successfully."); 
+				apiSuccessResponse("Employee contact has been updated successfully."); 
 			}else{
 				// Set the response and exit
-				$this->badRequest("Something went wrong, please try again."); 
+				apiBadRequest("Something went wrong, please try again."); 
 			} 
 	    }else{  
-	    	$this->badRequest($this->form_validation->error_array());
+	    	apiBadRequest($this->form_validation->error_array());
 	    }  
 	}
 
@@ -113,7 +113,7 @@ class EmployeeContact extends REST_Controller {
 	    	//Validate Eemployee id
 	    	$validateEmployee = $this->CommonM->getEmployeeById($this->post('employee_id'));
 	    	if(!$validateEmployee){
-	    		$this->badRequest(['message'=>'Invalid employee id']);
+	    		apiBadRequest(['message'=>'Invalid employee id']);
 	    	}
 
 	    	//Prepare department array
@@ -129,30 +129,14 @@ class EmployeeContact extends REST_Controller {
 			// Check if the department data inserted
 			if($contact_id){  
 				// Set the response and exit
-				$this->successResponse("Employee contact has been saved successfully."); 
+				apiSuccessResponse("Employee contact has been saved successfully."); 
 			}else{
 				// Set the response and exit
-				$this->badRequest("Something went wrong, please try again."); 
+				apiBadRequest("Something went wrong, please try again."); 
 			} 
 	    }else{  
-	    	$this->badRequest($this->form_validation->error_array());
+	    	apiBadRequest($this->form_validation->error_array());
 	    }  
 	}
-
- 
-	public function badRequest($message)
-	{
-		return $this->response($message, REST_Controller::HTTP_BAD_REQUEST);
-	}
-
-	public function successResponse($message)
-	{
-		return $this->response(['status' => TRUE, 'message' => $message], REST_Controller::HTTP_OK);
-	}
-
-	public function notFoundResponse($message)
-	{ 
-		return $this->response(['status' => FALSE, 'message' => $message ], REST_Controller::HTTP_NOT_FOUND);
-	}
-
+  
 }
